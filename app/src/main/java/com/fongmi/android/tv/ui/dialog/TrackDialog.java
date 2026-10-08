@@ -25,7 +25,6 @@ import com.fongmi.android.tv.App;
 import com.fongmi.android.tv.R;
 import com.fongmi.android.tv.ai.AiSubtitleCue;
 import com.fongmi.android.tv.ai.AiSubtitleService;
-import com.fongmi.android.tv.ai.AiVoiceController;
 import com.fongmi.android.tv.ai.local.LocalMnnEngine;
 import com.fongmi.android.tv.bean.Sub;
 import com.fongmi.android.tv.bean.Track;
@@ -105,7 +104,6 @@ public final class TrackDialog extends BaseBottomSheetDialog implements TrackAda
         binding.choose.setVisibility(hasChoose() ? View.VISIBLE : View.GONE);
         binding.setting.setVisibility(hasSetting() ? View.VISIBLE : View.GONE);
         binding.aiSubtitle.setVisibility(type == C.TRACK_TYPE_TEXT && player.isVod() && AiSetting.isSubtitleEnabled() ? View.VISIBLE : View.GONE);
-        binding.aiVoice.setVisibility(type == C.TRACK_TYPE_AUDIO && player.isVod() && AiSetting.isVoiceEnabled() ? View.VISIBLE : View.GONE);
         binding.title.setText(ResUtil.getStringArray(R.array.select_track)[type - 1]);
     }
 
@@ -114,8 +112,7 @@ public final class TrackDialog extends BaseBottomSheetDialog implements TrackAda
         binding.search.setOnClickListener(this::onSearch);
         binding.choose.setOnClickListener(this::onChoose);
         binding.setting.setOnClickListener(this::onSetting);
-        binding.aiSubtitle.setOnClickListener(view -> runAi(false));
-        binding.aiVoice.setOnClickListener(view -> runAi(true));
+        binding.aiSubtitle.setOnClickListener(view -> runAi());
     }
 
     private void setRecyclerView() {
@@ -144,12 +141,12 @@ public final class TrackDialog extends BaseBottomSheetDialog implements TrackAda
         showSetting(activity);
     }
 
-    private void runAi(boolean voice) {
-        if (voice ? !AiSetting.isVoiceEnabled() : !AiSetting.isSubtitleEnabled()) return;
-        if (!AiSetting.isConfigured() && !LocalMnnEngine.isSupported()) { AiConfigDialog.show(requireContext(), () -> runAi(voice)); return; }
+    private void runAi() {
+        if (!AiSetting.isSubtitleEnabled()) return;
+        if (!AiSetting.isConfigured() && !LocalMnnEngine.isSupported()) { AiConfigDialog.show(requireContext(), this::runAi); return; }
         dismiss(); Notify.progress(requireContext());
         AiSubtitleService.translate(player, new AiSubtitleService.Callback() {
-            @Override public void onSuccess(Sub subtitle, List<AiSubtitleCue> cues) { Notify.dismiss(); player.setSub(subtitle); if (voice) AiVoiceController.start(player, cues); Notify.show(voice ? "AI中文配音已生成" : "AI中文字幕已生成"); }
+            @Override public void onSuccess(Sub subtitle, List<AiSubtitleCue> cues) { Notify.dismiss(); player.setSub(subtitle); Notify.show("AI中文字幕已生成"); }
             @Override public void onError(String message) { Notify.dismiss(); Notify.show(message); }
         });
     }

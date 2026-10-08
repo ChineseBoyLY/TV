@@ -14,12 +14,8 @@ public final class AiSetting {
     public static void putApiKey(String value) { Prefers.put("ai_api_key", value == null ? "" : value.trim()); }
     public static String getModel() { return Prefers.getString("ai_model", "gpt-4o-mini"); }
     public static void putModel(String value) { Prefers.put("ai_model", trim(value)); }
-    public static String getVoice() { return Prefers.getString("ai_voice", "alloy"); }
-    public static void putVoice(String value) { Prefers.put("ai_voice", trim(value)); }
     public static boolean isSubtitleEnabled() { return Prefers.getBoolean("ai_subtitle_enabled", false); }
     public static void putSubtitleEnabled(boolean enabled) { Prefers.put("ai_subtitle_enabled", enabled); }
-    public static boolean isVoiceEnabled() { return Prefers.getBoolean("ai_voice_enabled", true); }
-    public static void putVoiceEnabled(boolean enabled) { Prefers.put("ai_voice_enabled", enabled); }
     public static boolean isConfigured() { return !TextUtils.isEmpty(getBaseUrl()) && !TextUtils.isEmpty(getApiKey()); }
 
     public static String endpoint(String path) {

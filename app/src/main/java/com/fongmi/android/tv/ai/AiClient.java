@@ -63,15 +63,6 @@ public final class AiClient {
         return result;
     }
 
-    public static byte[] speech(@NonNull String text) throws IOException {
-        JsonObject body = new JsonObject(); body.addProperty("model", "tts-1"); body.addProperty("voice", AiSetting.getVoice()); body.addProperty("input", text); body.addProperty("response_format", "mp3");
-        Request request = new Request.Builder().url(AiSetting.endpoint("/audio/speech")).header("Authorization", "Bearer " + AiSetting.getApiKey()).post(RequestBody.create(App.gson().toJson(body), JSON)).build();
-        try (Response response = OkHttp.client().newCall(request).execute()) {
-            if (!response.isSuccessful() || response.body() == null) throw new IOException("AI语音请求失败: " + response.code());
-            return response.body().bytes();
-        }
-    }
-
     private static JsonObject post(String path, JsonObject body) throws IOException {
         Request request = new Request.Builder().url(AiSetting.endpoint(path)).header("Authorization", "Bearer " + AiSetting.getApiKey()).post(RequestBody.create(App.gson().toJson(body), JSON)).build();
         try (Response response = OkHttp.client().newCall(request).execute()) {

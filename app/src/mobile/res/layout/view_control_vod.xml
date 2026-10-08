@@ -88,7 +88,7 @@
                 android:layout_height="48dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:gravity="center"
-                android:text="AI"
+                android:text="字"
                 android:textColor="@color/white"
                 android:textSize="13sp"
                 android:contentDescription="AI 中文字幕" />
