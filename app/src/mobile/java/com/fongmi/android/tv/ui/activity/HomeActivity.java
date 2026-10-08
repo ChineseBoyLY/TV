@@ -78,6 +78,8 @@ public class HomeActivity extends BaseActivity implements NavigationBarView.OnIt
 
     @Override
     protected void initView(Bundle savedInstanceState) {
+        com.fongmi.android.tv.BuiltinConfigs.install();
+        com.fongmi.android.tv.ai.local.LocalAiBootstrap.start(this);
         orientation = getResources().getConfiguration().orientation;
         mBinding.navigation.setOnItemSelectedListener(this);
         PermissionUtil.requestNotify(this);

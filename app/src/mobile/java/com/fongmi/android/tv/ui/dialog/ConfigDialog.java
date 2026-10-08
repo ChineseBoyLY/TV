@@ -67,7 +67,9 @@ public class ConfigDialog extends BaseAlertDialog {
 
     @Override
     protected MaterialAlertDialogBuilder getBuilder() {
-        return builder().setTitle(type == 0 ? R.string.setting_vod : type == 1 ? R.string.setting_live : R.string.setting_wall).setView(getBinding().getRoot()).setPositiveButton(edit ? R.string.dialog_edit : R.string.dialog_positive, this::onPositive).setNegativeButton(R.string.dialog_negative, null);
+        MaterialAlertDialogBuilder builder = builder().setTitle(type == 0 ? R.string.setting_vod : type == 1 ? R.string.setting_live : R.string.setting_wall).setView(getBinding().getRoot()).setPositiveButton(edit ? R.string.dialog_edit : R.string.dialog_positive, this::onPositive).setNegativeButton(R.string.dialog_negative, null);
+        if (type == 0 && !edit) builder.setNeutralButton(R.string.builtin_configs, this::onBuiltins);
+        return builder;
     }
 
     @Override
@@ -100,6 +102,17 @@ public class ConfigDialog extends BaseAlertDialog {
             case 2 -> WallConfig.get().getConfig();
             default -> null;
         };
+    }
+
+    private void onBuiltins(DialogInterface dialog, int which) {
+        String[] names = getResources().getStringArray(R.array.builtin_config_names);
+        String[] urls = getResources().getStringArray(R.array.builtin_config_urls);
+        ConfigListener listener = (ConfigListener) requireParentFragment();
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.builtin_configs)
+                .setItems(names, (picker, index) -> listener.setConfig(Config.find(urls[index], names[index], 0)))
+                .setNegativeButton(R.string.dialog_negative, null)
+                .show();
     }
 
     private void onChoose(View view) {

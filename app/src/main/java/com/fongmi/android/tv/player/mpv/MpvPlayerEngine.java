@@ -71,14 +71,12 @@ public class MpvPlayerEngine implements PlayerEngine, Player.Listener {
 
     @Override
     public SecondarySubtitleState getSecondarySubtitleState() {
-        return new SecondarySubtitleState(player.getPrimaryTextTrackSelectionOverride(), player.getSecondaryTextTrackSelectionOverride(), player.getSecondaryTextTrackSelectionOverrides(), player.isSecondaryTextTrackSuppressed());
+        return SecondarySubtitleState.EMPTY;
     }
 
     @Override
     public void setSecondarySubtitleSelection(@Nullable TrackSelectionOverride selection) {
-        int mode = SubtitleSetting.getSecondaryMode();
-        applySecondarySubtitleMode(mode);
-        if (mode != SubtitleSetting.SECONDARY_MODE_DEFAULT) player.setSecondaryTextTrackSelectionOverride(selection);
+        applySecondarySubtitleMode(SubtitleSetting.getSecondaryMode());
     }
 
     @Override
@@ -143,7 +141,6 @@ public class MpvPlayerEngine implements PlayerEngine, Player.Listener {
     }
 
     private void applySecondarySubtitleMode(int mode) {
-        if (mode == SubtitleSetting.SECONDARY_MODE_DEFAULT) player.resetSecondaryTextTrackSelection();
-        else player.setSecondaryTextTrackAutoSelectionEnabled(mode == SubtitleSetting.SECONDARY_MODE_AUTO);
+        // Secondary track selection is unavailable in the public MPV AAR.
     }
 }

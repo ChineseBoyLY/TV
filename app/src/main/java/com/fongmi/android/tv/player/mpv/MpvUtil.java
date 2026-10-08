@@ -103,10 +103,7 @@ public final class MpvUtil {
         MpvSubtitleOptions.Builder builder = new MpvSubtitleOptions.Builder();
         if (SubtitleSetting.isPositionSet()) builder.setPosition(getSubtitlePosition());
         if (SubtitleSetting.isScaleApplied()) builder.setScale(SubtitleSetting.getAppliedScale());
-        if (SubtitleSetting.isSecondaryPositionSet()) builder.setSecondarySubtitlePosition(SubtitleSetting.getSecondaryPosition());
-        if (SubtitleSetting.isStyleForced()) builder.setSecondaryAssStyleOverride(true);
-        String fontFamily = SubtitleSetting.getFontFamily();
-        if (fontFamily != null) builder.setFontFamily(fontFamily).setFontsDirectory(ExternalFont.getDirectory().getAbsolutePath());
+        if (SubtitleSetting.getSecondaryMode() != SubtitleSetting.SECONDARY_MODE_DEFAULT) builder.setSecondarySubtitle(SubtitleSetting.getSecondaryMode(), SubtitleSetting.getSecondaryPosition(), SubtitleSetting.isStyleForced());
         if (SubtitleSetting.isCustomStyle()) builder.setCustomStyle(SubtitleSetting.getTextColor(), SubtitleSetting.getBackgroundColor(), SubtitleSetting.getEdgeType(), SubtitleSetting.getEdgeColor(), SubtitleSetting.getEdgeWidth(), SubtitleSetting.getShadow());
         else if (SubtitleSetting.isSystemStyle()) builder.setSystemCaptionStyle();
         return builder.build();

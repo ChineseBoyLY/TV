@@ -27,6 +27,7 @@ import com.fongmi.android.tv.impl.LiveListener;
 import com.fongmi.android.tv.impl.SiteListener;
 import com.fongmi.android.tv.setting.PlayerSetting;
 import com.fongmi.android.tv.setting.Setting;
+import com.fongmi.android.tv.setting.AiSetting;
 import com.fongmi.android.tv.ui.activity.HomeActivity;
 import com.fongmi.android.tv.ui.base.BaseFragment;
 import com.fongmi.android.tv.ui.dialog.ConfigDialog;
@@ -35,6 +36,7 @@ import com.fongmi.android.tv.ui.dialog.LiveDialog;
 import com.fongmi.android.tv.ui.dialog.RestoreDialog;
 import com.fongmi.android.tv.ui.dialog.SiteDialog;
 import com.fongmi.android.tv.ui.dialog.ThemeDialog;
+import com.fongmi.android.tv.ui.dialog.AiConfigDialog;
 import com.fongmi.android.tv.utils.FileUtil;
 import com.fongmi.android.tv.utils.Notify;
 import com.fongmi.android.tv.utils.PermissionUtil;
@@ -100,6 +102,7 @@ public class SettingFragment extends BaseFragment implements ConfigListener, Sit
         mBinding.dohText.setText(getDohList()[getDohIndex()]);
         mBinding.incognitoText.setText(Setting.getSwitch(Setting.isIncognito()));
         mBinding.sizeText.setText((size = ResUtil.getStringArray(R.array.select_size))[PlayerSetting.getSize()]);
+        mBinding.aiText.setText(AiSetting.isConfigured() ? "已配置" : "未配置（本地/系统语音）");
     }
 
     private void setCacheText() {
@@ -121,6 +124,7 @@ public class SettingFragment extends BaseFragment implements ConfigListener, Sit
         mBinding.cache.setOnClickListener(this::onCache);
         mBinding.backup.setOnClickListener(this::onBackup);
         mBinding.player.setOnClickListener(this::onPlayer);
+        mBinding.ai.setOnClickListener(this::onAi);
         mBinding.danmaku.setOnClickListener(this::onDanmaku);
         mBinding.restore.setOnClickListener(this::onRestore);
         mBinding.version.setOnClickListener(this::onVersion);
@@ -248,6 +252,10 @@ public class SettingFragment extends BaseFragment implements ConfigListener, Sit
 
     private void onDanmaku(View view) {
         getRoot().change(3);
+    }
+
+    private void onAi(View view) {
+        AiConfigDialog.show(requireContext(), () -> mBinding.aiText.setText(AiSetting.isConfigured() ? "已配置" : "未配置（本地/系统语音）"));
     }
 
     private void onThemeColor(View view) {

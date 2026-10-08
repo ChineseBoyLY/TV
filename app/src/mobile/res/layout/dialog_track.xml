@@ -53,6 +53,15 @@
             android:visibility="gone"
             tools:visibility="visible" />
 
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/ai_subtitle" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginStart="12dp" android:background="?attr/selectableItemBackgroundBorderless"
+            android:text="AI字幕" android:textColor="?attr/colorPrimary" android:textSize="12sp" android:visibility="gone" />
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/ai_voice" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginStart="12dp" android:background="?attr/selectableItemBackgroundBorderless"
+            android:text="AI配音" android:textColor="?attr/colorPrimary" android:textSize="12sp" android:visibility="gone" />
+
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <com.fongmi.android.tv.ui.custom.CustomRecyclerView

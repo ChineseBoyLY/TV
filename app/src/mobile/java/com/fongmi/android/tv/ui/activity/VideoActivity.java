@@ -42,6 +42,9 @@ import com.bumptech.glide.request.transition.Transition;
 import com.fongmi.android.tv.App;
 import com.fongmi.android.tv.Constant;
 import com.fongmi.android.tv.R;
+import com.fongmi.android.tv.ai.AiSubtitleCue;
+import com.fongmi.android.tv.ai.AiSubtitleService;
+import com.fongmi.android.tv.ai.local.LocalMnnEngine;
 import com.fongmi.android.tv.api.DanmakuApi;
 import com.fongmi.android.tv.api.SiteApi;
 import com.fongmi.android.tv.api.config.VodConfig;
@@ -75,6 +78,7 @@ import com.fongmi.android.tv.playback.vod.VodPlaybackMedia;
 import com.fongmi.android.tv.player.media.PlaySpec;
 import com.fongmi.android.tv.service.PlaybackService;
 import com.fongmi.android.tv.setting.DanmakuSetting;
+import com.fongmi.android.tv.setting.AiSetting;
 import com.fongmi.android.tv.setting.PlayerSetting;
 import com.fongmi.android.tv.setting.SpeedSetting;
 import com.fongmi.android.tv.ui.adapter.EpisodeAdapter;
@@ -85,6 +89,7 @@ import com.fongmi.android.tv.ui.base.ViewType;
 import com.fongmi.android.tv.ui.custom.CustomKeyDown;
 import com.fongmi.android.tv.ui.custom.CustomMovement;
 import com.fongmi.android.tv.ui.custom.SpaceItemDecoration;
+import com.fongmi.android.tv.ui.dialog.AiConfigDialog;
 import com.fongmi.android.tv.ui.dialog.CastDialog;
 import com.fongmi.android.tv.ui.dialog.ChapterDialog;
 import com.fongmi.android.tv.ui.dialog.ControlDialog;
@@ -332,6 +337,7 @@ public class VideoActivity extends PlaybackActivity implements Clock.Callback, C
         mBinding.control.info.setOnClickListener(view -> onInfo());
         mBinding.control.keep.setOnClickListener(view -> onKeep());
         mBinding.control.download.setOnClickListener(view -> onDownload());
+        mBinding.control.aiSubtitle.setOnClickListener(view -> onAiSubtitleToggle());
         mBinding.control.play.setOnClickListener(view -> checkPlay());
         mBinding.control.next.setOnClickListener(view -> checkNext());
         mBinding.control.prev.setOnClickListener(view -> checkPrev());
@@ -926,6 +932,44 @@ public class VideoActivity extends PlaybackActivity implements Clock.Callback, C
                 }).show();
     }
 
+    private void onAiSubtitleToggle() {
+        if (AiSetting.isSubtitleEnabled()) {
+            AiSetting.putSubtitleEnabled(false);
+            updateAiSubtitleButton();
+            Notify.show("AI中文字幕已关闭");
+            return;
+        }
+        if (!AiSetting.isConfigured() && !LocalMnnEngine.isSupported()) {
+            AiConfigDialog.show(this, this::enableAiSubtitle);
+            return;
+        }
+        enableAiSubtitle();
+    }
+
+    private void enableAiSubtitle() {
+        AiSetting.putSubtitleEnabled(true);
+        updateAiSubtitleButton();
+        Notify.progress(this);
+        AiSubtitleService.translate(player(), new AiSubtitleService.Callback() {
+            @Override public void onSuccess(Sub subtitle, List<AiSubtitleCue> cues) {
+                Notify.dismiss();
+                player().setSub(subtitle);
+                Notify.show("AI中文字幕已生成");
+            }
+
+            @Override public void onError(String message) {
+                Notify.dismiss();
+                AiSetting.putSubtitleEnabled(false);
+                updateAiSubtitleButton();
+                Notify.show(message);
+            }
+        });
+    }
+
+    private void updateAiSubtitleButton() {
+        mBinding.control.aiSubtitle.setAlpha(AiSetting.isSubtitleEnabled() ? 1.0f : 0.45f);
+    }
+
     private void checkPlay() {
         setR1Callback();
         if (player().isPlaying()) onPaused();
@@ -1185,6 +1229,8 @@ public class VideoActivity extends PlaybackActivity implements Clock.Callback, C
         mBinding.control.action.parse.setVisibility(isUseParse() ? View.VISIBLE : View.GONE);
         mBinding.control.info.setVisibility(player().isEmpty() ? View.GONE : View.VISIBLE);
         mBinding.control.cast.setVisibility(player().isEmpty() ? View.GONE : View.VISIBLE);
+        mBinding.control.aiSubtitle.setVisibility(player().isVod() ? View.VISIBLE : View.GONE);
+        updateAiSubtitleButton();
         mBinding.control.center.setVisibility(isLock() ? View.GONE : View.VISIBLE);
         mBinding.control.bottom.setVisibility(isLock() ? View.GONE : View.VISIBLE);
         mBinding.control.back.setVisibility(isLock() ? View.GONE : View.VISIBLE);

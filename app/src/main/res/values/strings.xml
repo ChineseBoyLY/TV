@@ -262,6 +262,9 @@
     <string name="setting_live">Live</string>
     <string name="setting_wall">Wallpaper</string>
     <string name="setting_player">Player setting</string>
+    <string name="setting_ai">AI 字幕 / 配音</string>
+    <string name="download_channel_name">视频下载</string>
+    <string name="download_channel_description">视频下载进度</string>
     <string name="setting_danmaku">Danmaku setting</string>
     <string name="setting_incognito">Incognito mode</string>
     <string name="setting_theme_color">Theme color</string>

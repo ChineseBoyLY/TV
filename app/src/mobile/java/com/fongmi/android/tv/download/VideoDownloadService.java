@@ -18,10 +18,17 @@ import java.util.List;
 
 public final class VideoDownloadService extends DownloadService {
     private static final int NOTIFICATION_ID = 4108;
-    private final DownloadNotificationHelper helper = new DownloadNotificationHelper(this, Notify.DEFAULT);
+    private DownloadNotificationHelper helper;
 
     public VideoDownloadService() {
-        super(NOTIFICATION_ID, DEFAULT_FOREGROUND_NOTIFICATION_UPDATE_INTERVAL, Notify.DEFAULT, 0, 0);
+        super(NOTIFICATION_ID, DEFAULT_FOREGROUND_NOTIFICATION_UPDATE_INTERVAL, Notify.DEFAULT,
+                R.string.download_channel_name, R.string.download_channel_description);
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        helper = new DownloadNotificationHelper(this, Notify.DEFAULT);
     }
 
     @Override

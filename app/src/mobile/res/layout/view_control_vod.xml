@@ -82,6 +82,17 @@
                 android:scaleType="center"
                 android:src="@drawable/ic_sync_download" />
 
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/aiSubtitle"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:gravity="center"
+                android:text="AI"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                android:contentDescription="AI 中文字幕" />
+
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/setting"
                 android:layout_width="48dp"

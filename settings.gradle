@@ -21,6 +21,7 @@ dependencyResolutionManagement {
 }
 
 include ':app'
+include ':localai'
 include ':catvod'
 include ':chaquo'
 include ':quickjs'

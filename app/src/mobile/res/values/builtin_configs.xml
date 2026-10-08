@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="builtin_config_names" translatable="false">
+        <item>饭太硬 · qist</item>
+        <item>qist 综合 · 备用</item>
+    </string-array>
+    <string-array name="builtin_config_urls" translatable="false">
+        <item>https://qist.wyfc.qzz.io/fty.json</item>
+        <item>https://qist.wyfc.qzz.io/jsm.json</item>
+    </string-array>
+    <string name="builtin_configs">内置配置</string>
+    <string name="personal_app_name">影视·自用</string>
+</resources>

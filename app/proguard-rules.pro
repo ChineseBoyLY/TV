@@ -80,3 +80,5 @@
 -keep class com.google.zxing.qrcode.QRCodeReader { *; }
 -keep class com.google.zxing.qrcode.QRCodeWriter { *; }
 -keep class com.google.zxing.qrcode.decoder.ErrorCorrectionLevel { *; }
+# JNI entry points for the optional arm64 local AI engine.
+-keep class com.fongmi.android.tv.ai.local.LocalMnnEngine { *; }

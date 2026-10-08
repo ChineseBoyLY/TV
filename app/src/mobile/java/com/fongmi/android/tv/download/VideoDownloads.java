@@ -87,12 +87,20 @@ public final class VideoDownloads {
         String url = item.localConfiguration.uri.toString();
         EXECUTOR.execute(() -> {
             try {
-                String playlist = probe(url, headers);
+                // Do not make a separate strict request a prerequisite for downloading.
+                // Some providers reject HEAD/secondary GET requests while the player can
+                // still play the same URL with its normal request headers.
+                saveHeaders(headers);
+                String playlist = null;
+                try {
+                    playlist = probe(url, headers);
+                } catch (IOException ignored) {
+                    // Let Media3 perform the real download request and report its actual error.
+                }
                 if (playlist != null && !playlist.contains("#EXT-X-ENDLIST")) {
                     post(callback, "直播清单尚未结束，不能下载");
                     return;
                 }
-                saveHeaders(headers);
                 String id = id(url);
                 DownloadRequest request = new DownloadRequest.Builder(id, Uri.parse(url))
                         .setMimeType(item.localConfiguration.mimeType)

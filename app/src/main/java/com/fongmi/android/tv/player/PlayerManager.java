@@ -48,6 +48,7 @@ import com.google.common.net.HttpHeaders;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 
 public class PlayerManager implements ParseCallback {
 
@@ -129,6 +130,18 @@ public class PlayerManager implements ParseCallback {
 
     public String getUrl() {
         return spec != null ? spec.getUrl() : null;
+    }
+
+    public List<Sub> getSubs() {
+        return spec == null || spec.getSubs() == null ? List.of() : new ArrayList<>(spec.getSubs());
+    }
+
+    public void setVolume(float volume) {
+        if (player != null) player.setVolume(Math.max(0.0f, Math.min(1.0f, volume)));
+    }
+
+    public float getVolume() {
+        return player == null ? 1.0f : player.getVolume();
     }
 
     public String getKey() {
