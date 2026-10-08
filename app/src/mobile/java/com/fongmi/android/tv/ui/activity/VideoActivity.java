@@ -57,6 +57,7 @@ import com.fongmi.android.tv.bean.Sub;
 import com.fongmi.android.tv.bean.Vod;
 import com.fongmi.android.tv.databinding.ActivityVideoBinding;
 import com.fongmi.android.tv.db.AppDatabase;
+import com.fongmi.android.tv.download.VideoDownloads;
 import com.fongmi.android.tv.event.CastEvent;
 import com.fongmi.android.tv.event.RefreshEvent;
 import com.fongmi.android.tv.impl.CustomTarget;
@@ -330,6 +331,7 @@ public class VideoActivity extends PlaybackActivity implements Clock.Callback, C
         mBinding.control.cast.setOnClickListener(view -> onCast());
         mBinding.control.info.setOnClickListener(view -> onInfo());
         mBinding.control.keep.setOnClickListener(view -> onKeep());
+        mBinding.control.download.setOnClickListener(view -> onDownload());
         mBinding.control.play.setOnClickListener(view -> checkPlay());
         mBinding.control.next.setOnClickListener(view -> checkNext());
         mBinding.control.prev.setOnClickListener(view -> checkPrev());
@@ -905,6 +907,23 @@ public class VideoActivity extends PlaybackActivity implements Clock.Callback, C
         if (keep != null) keep.delete();
         else createKeep();
         checkKeepImg();
+    }
+
+    private void onDownload() {
+        androidx.media3.common.MediaItem item = player().getCurrentMediaItem();
+        if (item == null || item.localConfiguration == null || player().isLive()) {
+            Notify.show("请先播放点播视频，直播暂不支持下载");
+            return;
+        }
+        new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+                .setTitle("下载本集")
+                .setMessage(player().getMediaTitle() + "\n下载完成后可从下载管理离线观看")
+                .setNegativeButton("取消", null)
+                .setNeutralButton("下载管理", (dialog, which) -> DownloadsActivity.start(this))
+                .setPositiveButton("开始下载", (dialog, which) -> {
+                    Notify.show("正在检查下载地址…");
+                    VideoDownloads.prepare(item, player().getMediaTitle(), player().getHeaders(), Notify::show);
+                }).show();
     }
 
     private void checkPlay() {

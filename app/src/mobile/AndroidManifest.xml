@@ -6,6 +6,7 @@
         android:required="false" />
 
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <supports-screens
@@ -128,6 +129,10 @@
             android:parentActivityName=".ui.activity.HomeActivity"
             android:supportsPictureInPicture="true" />
 
+        <activity android:name=".ui.activity.DownloadsActivity" android:exported="false" />
+        <activity android:name=".ui.activity.OfflineVideoActivity" android:exported="false"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation" />
+
         <receiver
             android:name=".receiver.ShortcutReceiver"
             android:exported="false" />
@@ -135,6 +140,15 @@
         <service
             android:name=".service.DLNACastService"
             android:exported="false" />
+
+        <service
+            android:name=".download.VideoDownloadService"
+            android:exported="false"
+            android:foregroundServiceType="dataSync">
+            <intent-filter>
+                <action android:name="androidx.media3.exoplayer.downloadService.action.RESTART" />
+            </intent-filter>
+        </service>
 
     </application>
 </manifest>

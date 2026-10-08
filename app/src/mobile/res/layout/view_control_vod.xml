@@ -74,6 +74,15 @@
                 android:src="@drawable/ic_control_keep_off" />
 
             <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/download"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="下载"
+                android:scaleType="center"
+                android:src="@drawable/ic_sync_download" />
+
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/setting"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
