@@ -22,6 +22,7 @@ import com.fongmi.android.tv.R;
 import com.fongmi.android.tv.bean.WebResource;
 import com.fongmi.android.tv.databinding.FragmentWebSearchBinding;
 import com.fongmi.android.tv.net.GuideCatalog;
+import com.fongmi.android.tv.ui.activity.SearchActivity;
 import com.fongmi.android.tv.ui.adapter.WebSearchAdapter;
 import com.fongmi.android.tv.ui.base.BaseFragment;
 
@@ -60,7 +61,9 @@ public class WebSearchFragment extends BaseFragment implements WebSearchAdapter.
     }
 
     private void search() {
-        filter();
+        String text = binding.keyword.getText().toString().trim();
+        if (text.isEmpty()) return;
+        SearchActivity.start(requireActivity(), text);
     }
 
     private void addCategory(String name) {
