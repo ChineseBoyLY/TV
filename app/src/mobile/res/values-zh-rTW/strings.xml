@@ -8,6 +8,7 @@
     <string name="nav_vod">點播</string>
     <string name="nav_live">直播</string>
     <string name="nav_setting">設定</string>
+    <string name="nav_web">指南</string>
 
     <!-- Menu -->
     <string name="menu_sync">同步</string>
@@ -15,6 +16,7 @@
     <string name="menu_search">搜尋</string>
     <string name="menu_site">站點</string>
     <string name="menu_reset">重設</string>
+    <string name="menu_web_search">全網資源</string>
 
     <!-- Vod -->
     <string name="vod_home">推薦</string>

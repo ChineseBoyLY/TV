@@ -8,6 +8,12 @@
         android:visible="false" />
 
     <item
+        android:id="@+id/web"
+        android:icon="@drawable/ic_action_web"
+        android:title="@string/nav_web"
+        android:visible="false" />
+
+    <item
         android:id="@+id/live"
         android:icon="@drawable/ic_nav_live"
         android:title="@string/nav_live"

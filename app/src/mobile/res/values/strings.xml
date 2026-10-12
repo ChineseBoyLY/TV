@@ -8,6 +8,7 @@
     <string name="nav_vod">Vod</string>
     <string name="nav_live">Live</string>
     <string name="nav_setting">Setting</string>
+    <string name="nav_web">Guide</string>
 
     <!-- Menu -->
     <string name="menu_sync">Sync</string>
@@ -15,6 +16,7 @@
     <string name="menu_search">Search</string>
     <string name="menu_site">Site</string>
     <string name="menu_reset">Reset</string>
+    <string name="menu_web_search">Web resources</string>
 
     <!-- Vod -->
     <string name="vod_home">Home</string>

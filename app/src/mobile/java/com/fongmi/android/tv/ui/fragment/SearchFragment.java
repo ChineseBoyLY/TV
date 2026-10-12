@@ -192,6 +192,7 @@ public class SearchFragment extends BaseFragment implements MenuProvider, WordAd
         mBinding.keyword.post(() -> SiteDialog.create().search().show(this));
     }
 
+
     @Override
     public void onItemClick(String text) {
         setKeyword(text);
