@@ -22,7 +22,7 @@ import com.fongmi.android.tv.R;
 import com.fongmi.android.tv.bean.WebResource;
 import com.fongmi.android.tv.databinding.FragmentWebSearchBinding;
 import com.fongmi.android.tv.net.GuideCatalog;
-import com.fongmi.android.tv.ui.activity.SearchActivity;
+import com.fongmi.android.tv.net.GuideContentSearch;
 import com.fongmi.android.tv.ui.adapter.WebSearchAdapter;
 import com.fongmi.android.tv.ui.base.BaseFragment;
 
@@ -63,7 +63,12 @@ public class WebSearchFragment extends BaseFragment implements WebSearchAdapter.
     private void search() {
         String text = binding.keyword.getText().toString().trim();
         if (text.isEmpty()) return;
-        SearchActivity.start(requireActivity(), text);
+        binding.status.setText("正在搜索精选网站…");
+        GuideContentSearch.search(text, new GuideContentSearch.Callback() {
+            @Override public void onStatus(String status) { requireActivity().runOnUiThread(() -> binding.status.setText(status)); }
+            @Override public void onResult(List<WebResource> result) { requireActivity().runOnUiThread(() -> { adapter.setItems(result); binding.status.setText(result.isEmpty() ? "精选网站中没有找到相关内容" : "找到 " + result.size() + " 条真实内容"); }); }
+            @Override public void onError(String message) { requireActivity().runOnUiThread(() -> binding.status.setText(message)); }
+        });
     }
 
     private void addCategory(String name) {
