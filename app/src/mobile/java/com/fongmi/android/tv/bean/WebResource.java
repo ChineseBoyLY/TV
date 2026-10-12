@@ -20,10 +20,14 @@ public class WebResource {
     }
 
     public WebResource(@NonNull String title, @NonNull String description, @NonNull String category, @NonNull String url) {
+        this(title, description, category, url, false);
+    }
+
+    public WebResource(@NonNull String title, @NonNull String description, @NonNull String category, @NonNull String url, boolean playable) {
         this.title = title;
         this.url = url;
         this.page = url;
-        this.playable = false;
+        this.playable = playable;
         this.category = category;
         this.description = description;
     }

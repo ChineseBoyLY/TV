@@ -81,7 +81,7 @@ public final class GuideContentSearch {
                     if (title.length() < 2 || (!title.contains(keyword) && !matcher.group(1).contains(encoded))) continue;
                     String target = new java.net.URL(new java.net.URL(url), matcher.group(1)).toString();
                     if (!target.startsWith("http")) continue;
-                    result.putIfAbsent(target, new WebResource(title, "来自 " + source.getTitle() + " · " + source.getCategory(), source.getCategory(), target));
+                    result.putIfAbsent(target, new WebResource(title, "来自 " + source.getTitle() + " · " + source.getCategory(), source.getCategory(), target, true));
                 }
                 if (!result.isEmpty()) break;
             } catch (Exception ignored) {

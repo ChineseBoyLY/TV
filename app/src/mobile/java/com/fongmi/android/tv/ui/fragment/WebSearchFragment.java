@@ -23,6 +23,7 @@ import com.fongmi.android.tv.bean.WebResource;
 import com.fongmi.android.tv.databinding.FragmentWebSearchBinding;
 import com.fongmi.android.tv.net.GuideCatalog;
 import com.fongmi.android.tv.net.GuideContentSearch;
+import com.fongmi.android.tv.ui.activity.VideoActivity;
 import com.fongmi.android.tv.ui.adapter.WebSearchAdapter;
 import com.fongmi.android.tv.ui.base.BaseFragment;
 
@@ -115,6 +116,7 @@ public class WebSearchFragment extends BaseFragment implements WebSearchAdapter.
         binding.keyword.setOnEditorActionListener((view, action, event) -> { if (action == EditorInfo.IME_ACTION_SEARCH) search(); return true; });
     }
     @Override public void onItemClick(WebResource item) {
-        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(item.getUrl())));
+        if (item.isPlayable()) VideoActivity.push(requireActivity(), item.getUrl());
+        else startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(item.getUrl())));
     }
 }
