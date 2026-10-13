@@ -9,6 +9,7 @@
     <string name="nav_live">Live</string>
     <string name="nav_setting">Setting</string>
     <string name="nav_web">Guide</string>
+    <string name="nav_browser">Browser</string>
 
     <!-- Menu -->
     <string name="menu_sync">Sync</string>

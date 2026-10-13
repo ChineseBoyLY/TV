@@ -25,6 +25,7 @@ import com.fongmi.android.tv.api.config.WallConfig;
 import com.fongmi.android.tv.bean.Config;
 import com.fongmi.android.tv.databinding.ActivityHomeBinding;
 import com.fongmi.android.tv.db.BackupManager;
+import com.fongmi.android.tv.download.VideoDownloads;
 import com.fongmi.android.tv.event.ConfigEvent;
 import com.fongmi.android.tv.event.RefreshEvent;
 import com.fongmi.android.tv.event.ServerEvent;
@@ -42,6 +43,7 @@ import com.fongmi.android.tv.ui.fragment.SettingFragment;
 import com.fongmi.android.tv.ui.fragment.SettingPlayerFragment;
 import com.fongmi.android.tv.ui.fragment.SettingPreloadFragment;
 import com.fongmi.android.tv.ui.fragment.VodFragment;
+import com.fongmi.android.tv.ui.fragment.WebBrowserFragment;
 import com.fongmi.android.tv.ui.fragment.WebSearchFragment;
 import com.fongmi.android.tv.utils.FileChooser;
 import com.fongmi.android.tv.utils.Notify;
@@ -84,7 +86,9 @@ public class HomeActivity extends BaseActivity implements NavigationBarView.OnIt
         orientation = getResources().getConfiguration().orientation;
         mBinding.navigation.setOnItemSelectedListener(this);
         mBinding.navigation.getMenu().findItem(R.id.web).setVisible(true);
+        mBinding.navigation.getMenu().findItem(R.id.browser).setVisible(true);
         PermissionUtil.requestNotify(this);
+        VideoDownloads.resumePending();
         initFragment(savedInstanceState);
         Updater.create().start(this);
         initConfig();
@@ -118,11 +122,12 @@ public class HomeActivity extends BaseActivity implements NavigationBarView.OnIt
         mManager = new FragmentStateManager(mBinding.container, getSupportFragmentManager(), position -> switch (position) {
             case 0 -> VodFragment.newInstance();
             case 1 -> WebSearchFragment.newInstance("");
-            case 2 -> SettingFragment.newInstance();
-            case 3 -> SettingPlayerFragment.newInstance();
-            case 4 -> SettingDanmakuFragment.newInstance();
-            case 5 -> SettingPreloadFragment.newInstance();
-            case 6 -> SettingDecodeFragment.newInstance();
+            case 2 -> WebBrowserFragment.newInstance();
+            case 3 -> SettingFragment.newInstance();
+            case 4 -> SettingPlayerFragment.newInstance();
+            case 5 -> SettingDanmakuFragment.newInstance();
+            case 6 -> SettingPreloadFragment.newInstance();
+            case 7 -> SettingDecodeFragment.newInstance();
             default -> null;
         });
         if (savedInstanceState == null) change(0);
@@ -163,6 +168,7 @@ public class HomeActivity extends BaseActivity implements NavigationBarView.OnIt
     private void setNavigation() {
         mBinding.navigation.getMenu().findItem(R.id.vod).setVisible(true);
         mBinding.navigation.getMenu().findItem(R.id.web).setVisible(true);
+        mBinding.navigation.getMenu().findItem(R.id.browser).setVisible(true);
         mBinding.navigation.getMenu().findItem(R.id.setting).setVisible(true);
         mBinding.navigation.getMenu().findItem(R.id.live).setVisible(LiveConfig.hasUrl());
     }
@@ -180,7 +186,7 @@ public class HomeActivity extends BaseActivity implements NavigationBarView.OnIt
     }
 
     public void change(int position) {
-        if (position < 3) mBinding.navigation.setSelectedItemId(position == 0 ? R.id.vod : position == 1 ? R.id.web : R.id.setting);
+        if (position < 4) mBinding.navigation.setSelectedItemId(position == 0 ? R.id.vod : position == 1 ? R.id.web : position == 2 ? R.id.browser : R.id.setting);
         else mManager.change(position);
     }
 
@@ -212,8 +218,9 @@ public class HomeActivity extends BaseActivity implements NavigationBarView.OnIt
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.setting) return mManager.change(2);
+        if (item.getItemId() == R.id.setting) return mManager.change(3);
         if (item.getItemId() == R.id.web) return mManager.change(1);
+        if (item.getItemId() == R.id.browser) return mManager.change(2);
         if (item.getItemId() == R.id.vod) return mManager.change(0);
         if (item.getItemId() == R.id.live) return openLive();
         return false;
@@ -236,8 +243,10 @@ public class HomeActivity extends BaseActivity implements NavigationBarView.OnIt
     protected void onBackInvoked() {
         if (!mBinding.navigation.getMenu().findItem(R.id.vod).isVisible()) {
             setNavigation();
-        } else if (mManager.isVisible(6) || mManager.isVisible(5) || mManager.isVisible(4) || mManager.isVisible(3) || mManager.isVisible(2)) {
-            change(2);
+        } else if (mManager.isVisible(7) || mManager.isVisible(6) || mManager.isVisible(5) || mManager.isVisible(4) || mManager.isVisible(3)) {
+            change(3);
+        } else if (mManager.isVisible(2)) {
+            if (!((WebBrowserFragment) mManager.getFragment(2)).goBack()) change(0);
         } else if (mManager.isVisible(1)) {
             change(0);
         } else if (mManager.canBack(0)) {

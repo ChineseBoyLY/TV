@@ -22,6 +22,7 @@ import androidx.media3.exoplayer.offline.DownloadCursor;
 import androidx.media3.exoplayer.offline.DownloadIndex;
 import androidx.media3.exoplayer.offline.DownloadManager;
 import androidx.media3.exoplayer.offline.DownloadRequest;
+import androidx.media3.exoplayer.offline.DownloadService;
 
 import com.fongmi.android.tv.App;
 import com.fongmi.android.tv.utils.Notify;
@@ -146,6 +147,20 @@ public final class VideoDownloads {
         return result;
     }
 
+    /** Restarts the foreground service when an unfinished download survived process shutdown. */
+    public static void resumePending() {
+        EXECUTOR.execute(() -> {
+            try {
+                for (Download download : list()) {
+                    if (download.state == Download.STATE_COMPLETED || download.state == Download.STATE_FAILED || download.state == Download.STATE_STOPPED) continue;
+                    DownloadService.sendResumeDownloads(App.get(), VideoDownloadService.class, true);
+                    return;
+                }
+            } catch (Exception ignored) {
+            }
+        });
+    }
+
     public static Download find(String id) throws IOException {
         return manager().getDownloadIndex().getDownload(id);
     }
@@ -176,12 +191,17 @@ public final class VideoDownloads {
 
     public static MediaItem mediaItem(Download download) {
         Info info = info(download.request);
-        return new MediaItem.Builder().setUri(download.request.uri).setMediaId(download.request.id)
+        return new MediaItem.Builder().setUri(download.request.uri).setMimeType(download.request.mimeType).setMediaId(download.request.id)
                 .setMediaMetadata(new androidx.media3.common.MediaMetadata.Builder().setTitle(info.title).build()).build();
     }
 
     public static CacheDataSource.Factory offlineSource() {
         return new CacheDataSource.Factory().setCache(cache()).setUpstreamDataSourceFactory(new DefaultDataSource.Factory(App.get(), new FileDataSource.Factory())).setFlags(CacheDataSource.FLAG_BLOCK_ON_CACHE);
+    }
+
+    public static androidx.media3.exoplayer.source.MediaSource.Factory offlineMediaSourceFactory() {
+        CacheDataSource.Factory source = new CacheDataSource.Factory().setCache(cache()).setUpstreamDataSourceFactory(null).setFlags(CacheDataSource.FLAG_BLOCK_ON_CACHE);
+        return new androidx.media3.exoplayer.source.DefaultMediaSourceFactory(App.get()).setDataSourceFactory(source);
     }
 
     private static String id(String url) throws Exception {

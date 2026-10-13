@@ -99,6 +99,14 @@ dependencies {
     implementation libs.appcompat
     implementation libs.lifecycle.service
     implementation libs.media
+    implementation('androidx.media3:media3-transformer:1.8.0') {
+        // Media3 runtime modules are already bundled as matching local AARs.
+        exclude group: 'androidx.media3', module: 'media3-exoplayer'
+        exclude group: 'androidx.media3', module: 'media3-effect'
+        exclude group: 'androidx.media3', module: 'media3-common'
+        exclude group: 'androidx.media3', module: 'media3-container'
+        exclude group: 'androidx.media3', module: 'media3-datasource'
+    }
     implementation libs.palette
     implementation libs.recyclerview
     implementation libs.room.runtime

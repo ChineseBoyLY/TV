@@ -9,6 +9,7 @@
     <string name="nav_live">直播</string>
     <string name="nav_setting">设置</string>
     <string name="nav_web">指南</string>
+    <string name="nav_browser">浏览器</string>
 
     <!-- Menu -->
     <string name="menu_sync">同步</string>
